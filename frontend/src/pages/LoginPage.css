@@ -1,20 +1,30 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+.login-page-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("https://www.higherlowergame.com/images/background/xlarge.jpg") no-repeat center center/cover;
+  overflow: hidden;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-
 .logincontainer {
-  background-color: white;
-  padding: 1rem 3rem;
-  padding-bottom: 2rem;
+  background: rgba(139, 130, 113, 0.734);
+  padding: 2rem 3rem;
+  padding-bottom: 2.5rem;
   border-radius: 0.5rem;
-  border-top: rgb(80, 98, 255) 0.5rem solid;
+  border-top: 5px solid rgb(126, 231, 56);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 h2 {
   margin: 1rem 0;
+  color: #c1a734;
+  font-size: 2rem;
+  font-weight: bold;
+  opacity: calc(1);
 }
 
 form {
@@ -27,35 +37,54 @@ form div {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  text-align: left;
+}
+
+label {
+  font-weight: bold;
+  color: #c1a734;
 }
 
 input {
-  padding: 0.5rem;
+  padding: 0.6rem;
   border-radius: 0.3rem;
   border: 1px solid gray;
   font-size: 1.1rem;
+  background: #f9f9f9;
 }
 
 button {
-  background-color: rgb(80, 98, 255);
+  background: rgb(255, 94, 0);
   color: white;
   border: none;
-  padding: 0.5rem;
+  padding: 0.7rem;
   font-size: 1rem;
   text-transform: uppercase;
   cursor: pointer;
   border-radius: 0.3rem;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: rgb(230, 80, 0);
+}
+
+span {
+  font-size: 1rem;
+  color: #c1a734;
 }
 
 span a {
   text-decoration: none;
-  color: rgb(80, 98, 255);
+  color: rgb(126, 231, 56);
+  font-weight: bold;
 }
 
 .private {
   height: 100vh;
   width: 100vw;
-  background-color: rgb(80, 98, 255);
+  background-color: rgb(255, 94, 0);
   color: white;
   display: flex;
   justify-content: center;
@@ -71,4 +100,12 @@ span a {
   padding: 2rem 10rem;
   font-size: 4rem;
   border-radius: 2rem;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.private button:hover {
+  background-color: rgb(50, 50, 50);
 }
