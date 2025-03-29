@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import "../index.css";
+import "./HomePage.css";
 import logo from "../assets/logo4.png";
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
 
@@ -26,7 +25,7 @@ const HomePage = () => {
 
     // If username doesn't exist, create a new user
     const user = { username };
-    const response = await fetch(`${REACT_APP_BACKEND_URL}/api/users`, {
+    const response = await fetch(`/api/users`, {
       method: "POST",
       body: JSON.stringify(user),
       headers: { "content-Type": "application/json" },

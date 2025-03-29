@@ -46,7 +46,7 @@ const ResetPage = () => {
         <p>{MessageBasedOnScore(score)}</p>
 
         <div className="reset-buttons">
-          <button onClick={() => navigate("/")}>Main Menu</button>
+          <button onClick={() => navigate("/home")}>Main Menu</button>
           <button onClick={() => navigate("/game")}>Retry</button>
         </div>
       </div>

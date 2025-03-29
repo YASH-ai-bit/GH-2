@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./GamePage.css";
 
 const GamePage = () => {
-  const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [wordPair, setWordPair] = useState(null);
   const [currentUsername] = useState(localStorage.getItem("currentUsername"));
   const [score, setScore] = useState(0);
@@ -17,7 +16,7 @@ const GamePage = () => {
   const fetchWords = async () => {
     setIsFetching(true);
     try {
-      const response = await fetch(`${REACT_APP_BACKEND_URL}/api/words`, {
+      const response = await fetch(`/api/words`, {
         method: "GET",
         headers: {
           "content-Type": "application/json",
@@ -55,7 +54,7 @@ const GamePage = () => {
         );
 
         try {
-          const response = await fetch(`${REACT_APP_BACKEND_URL}/api/users/${userId}`, {
+          const response = await fetch(`/api/users/${userId}`, {
             method: "PUT",
             body: JSON.stringify({ highScore: score }),
             headers: {
