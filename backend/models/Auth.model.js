@@ -1,37 +1,26 @@
-import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { pool } from "../config/db.js";
 
-const Schema = mongoose.Schema;
+export const createAuth = async (email, password) => {
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-const authSchema = new Schema({
-    email: {
-        type: String,
-        required: [true, "Email is required"],
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: [true, "Password is required"],
-    }
-})
+    const result = await pool.query(
+        "INSERT INTO auth (email, password) VALUES ($1, $2) RETURNING *",
+        [email, hashedPassword]
+    );
+    return result.rows[0];
+};
 
-authSchema.pre("save", async function (next){
-    const salt =  await bcrypt.genSalt();
-    this.password =  await bcrypt.hash(this.password, salt);
-    next();
-})
+export const loginAuth = async (email, password) => {
+    const result = await pool.query("SELECT * FROM auth WHERE email = $1", [email]);
 
-authSchema.statics.login = async function (email, password) {
-    const auth = await this.findOne({email});
-    if(auth){
-        const _auth = await bcrypt.compare(password, auth.password);
-        if(_auth){
-            return auth;
-        }
-        throw Error("Incorrect Password");
-    }
-    throw Error("Incorrect Email");
-}
+    if (result.rowCount === 0) throw Error("Incorrect Email");
 
-const Auth = mongoose.model("Auth", authSchema);
-export default Auth
+    const auth = result.rows[0];
+    const isMatch = await bcrypt.compare(password, auth.password);
+
+    if (!isMatch) throw Error("Incorrect Password");
+
+    return auth;
+};

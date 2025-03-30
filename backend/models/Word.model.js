@@ -1,25 +1,14 @@
-import mongoose from "mongoose";
+import { pool } from "../config/db.js";  // PostgreSQL connection
 
-const Schema = mongoose.Schema;
+export const createWord = async (word, searchCount, imageUrl) => {
+    const result = await pool.query(
+        "INSERT INTO words (word, search_count, image_url) VALUES ($1, $2, $3) RETURNING *",
+        [word, searchCount, imageUrl]
+    );
+    return result.rows[0];
+};
 
-const wordSchema = new Schema(
-  {
-    word: {
-      type: String,
-      required: true,
-    },
-    searchCount: {
-      type: Number,
-      required: true,
-    },
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
-const Word = mongoose.model("Word", wordSchema);
-
-export default Word;
+export const getWords = async () => {
+    const result = await pool.query("SELECT * FROM words ORDER BY created_at DESC");
+    return result.rows;
+};

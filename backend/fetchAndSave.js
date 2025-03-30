@@ -1,131 +1,65 @@
-import mongoose from "mongoose";
-import { getJson } from "serpapi"; //using SerpApi for collecting data for images and searchCounts
+import { getJson } from "serpapi";
 import dotenv from "dotenv";
-import Word from "./models/Word.model.js";
+import { pool } from "./config/db.js"; 
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI;
 const SERP_API = process.env.SERP_API;
 
-mongoose.connect(process.env.MONGO_URI);
-
 const words = [
-  "OnlyFans",
-  "Etsy",
-  "Walgreens",
-  "Pizza",
-  "Starbucks",
-  "McDonald’s",
-  "Bitcoin",
-  "Apple",
-  "Chipotle",
-  "Sarkari Result",
-  "IPL",
-  "Proxy",
-  "Real Madrid",
-  "Indeed",
-  "duckduckgo",
-  "Airbnb",
-  "Diddy",
-  "Breaking Bad",
-  "APT",
-  "House of the Dragon",
-  "Dune",
-  "Connections",
-  "Mango Pickle",
-  "Wallerman",
-  "Liam Payne",
-  "Ratan Tata",
-  "CrowdStrike",
-  "Mike Tyson",
-  "Israel",
-  "Dress",
-  "Hurricane",
-  "Beauty",
+  "OnlyFans", "Etsy", "Walgreens", "Pizza", "Starbucks",
+  "McDonald’s", "Bitcoin", "Apple", "Chipotle", "Sarkari Result",
+  "IPL", "Proxy", "Real Madrid", "Indeed", "duckduckgo",
+  "Airbnb", "Diddy", "Breaking Bad", "APT", "House of the Dragon",
+  "Dune", "Connections", "Mango Pickle", "Wallerman", "Liam Payne",
+  "Ratan Tata", "CrowdStrike", "Mike Tyson", "Israel", "Dress",
+  "Hurricane", "Beauty"
 ];
 
-async function fetchAndSaveCountsForAWord(word) {
+async function fetchSearchCount(word) {
   return new Promise((resolve, reject) => {
-    getJson(
-      {
-        engine: "google",
-        q: word,
-        api_key: SERP_API,
-      },
-      async (json) => {
-        try {
-          const searchCount = json?.search_information?.total_results;
-
-          if (searchCount !== undefined) {
-            console.log(`Saving search counts for ${word} --> ${searchCount}`);
-            resolve(searchCount);
-          } else {
-            console.log(`Failed to fetch searchCounts for "${word}"`);
-            reject();
-          }
-        } catch (error) {
-          console.log(
-            `Error saving the search counts for "${word}"`,
-            error.message
-          );
-          reject(error);
-        }
-      }
-    );
+    getJson({ engine: "google", q: word, api_key: SERP_API }, (json) => {
+      const searchCount = json?.search_information?.total_results;
+      searchCount !== undefined ? resolve(searchCount) : reject(`Failed: ${word}`);
+    });
   });
 }
 
-async function fetchAndSaveImageForAWord(word) {
+async function fetchImageUrl(word) {
   return new Promise((resolve, reject) => {
-    getJson(
-      {
-        engine: "google_images",
-        q: word,
-        location: "Austin, TX, Texas, United States",
-        api_key: SERP_API,
-      },
-      async (json) => {
-        try {
-          const imageUrl = json?.images_results[0]?.original;
-
-          if (imageUrl !== undefined) {
-            console.log(`Saving image url for ${word} --> ${imageUrl}`);
-            resolve(imageUrl);
-          } else {
-            console.log(`Failed to fetch image url for "${word}"`);
-            reject();
-          }
-        } catch (error) {
-          console.log(
-            `Error saving the image url for "${word}"`,
-            error.message
-          );
-          reject(error);
-        }
-      }
-    );
+    getJson({ engine: "google_images", q: word, api_key: SERP_API }, (json) => {
+      const imageUrl = json?.images_results[0]?.original;
+      imageUrl ? resolve(imageUrl) : reject(`Failed: ${word}`);
+    });
   });
 }
 
-async function collectionOfDataInMongoDB() {
-  for (var i = 0; i < words.length; i++) {
+async function saveWordToPostgreSQL(word, searchCount, imageUrl) {
+  try {
+    const result = await pool.query(
+      "INSERT INTO words (word, search_count, image_url) VALUES ($1, $2, $3) RETURNING *",
+      [word, searchCount, imageUrl]
+    );
+    console.log(`Saved: ${word} --> ${searchCount}, ${imageUrl}`);
+  } catch (error) {
+    console.error(`Error saving ${word}:`, error.message);
+  }
+}
+
+async function fetchAndSaveAllWords() {
+  for (const word of words) {
     try {
       const [searchCount, imageUrl] = await Promise.all([
-        fetchAndSaveCountsForAWord(words[i]),
-        fetchAndSaveImageForAWord(words[i]),
+        fetchSearchCount(word),
+        fetchImageUrl(word)
       ]);
-      console.log(
-        `Saving data for ${words[i]} --> ${searchCount}  ,  ${imageUrl}`
-      );
-      const newWord = new Word({ word: words[i], searchCount, imageUrl });
-      await newWord.save();
+      await saveWordToPostgreSQL(word, searchCount, imageUrl);
     } catch (error) {
-      console.log(`Data error for ${words[i]}, so skipping it.`);
+      console.error(`Skipping ${word}:`, error);
     }
   }
-  console.log("data saved!!!");
-  mongoose.connection.close();
+  console.log("All words processed!");
+  pool.end(); 
 }
 
-collectionOfDataInMongoDB();
+fetchAndSaveAllWords();
