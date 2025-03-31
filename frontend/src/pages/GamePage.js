@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GamePage.css";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const GamePage = () => {
   const REACT_APP_API_URL = process.env.REACT_APP_API_URL;

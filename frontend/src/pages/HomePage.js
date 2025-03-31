@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import "./HomePage.css";
 import logo from "../assets/logo4.png";
 import { useNavigate } from "react-router-dom";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const HomePage = () => {
   const REACT_APP_API_URL = process.env.REACT_APP_API_URL;

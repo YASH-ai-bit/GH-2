@@ -3,9 +3,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "./RegisterPage.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const RegisterPage = () => {
   const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
