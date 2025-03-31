@@ -48,7 +48,7 @@ export const updateHighScore = async (req, res) => {
 
         if (highScore > result.rows[0].high_score) {
             await pool.query("UPDATE users SET high_score = $1 WHERE id = $2", [highScore, id]);
-            return res.status(200).json({ message: "High score updated!" });
+            return res.status(200).json({ message: "High score updated!", highScore });
         }
 
         res.status(200).json(result.rows[0]);
