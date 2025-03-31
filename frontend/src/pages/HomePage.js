@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import "./HomePage.css";
 import logo from "../assets/logo4.png";
 import { useNavigate } from "react-router-dom";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const HomePage = () => {
+  const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
 
@@ -25,7 +29,7 @@ const HomePage = () => {
 
     // If username doesn't exist, create a new user
     const user = { username };
-    const response = await fetch(`/api/users`, {
+    const response = await fetch(`${REACT_APP_API_URL}/api/users`, {
       method: "POST",
       body: JSON.stringify(user),
       headers: { "content-Type": "application/json" },

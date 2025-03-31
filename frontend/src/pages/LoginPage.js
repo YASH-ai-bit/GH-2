@@ -4,8 +4,12 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 import "./LoginPage.css";
 import { Link, useNavigate } from "react-router-dom";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const LoginPage = () => {
+  const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
   const [cookies] = useCookies(["jwt"]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -37,7 +41,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:8080/login",
+        `${REACT_APP_API_URL}/login`,
         {
           ...values,
         },

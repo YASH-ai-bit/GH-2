@@ -3,8 +3,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "./RegisterPage.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const RegisterPage = () => {
+  const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
@@ -20,7 +24,7 @@ const RegisterPage = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:8080/register",
+        `${REACT_APP_API_URL}/register`,
         {
           ...values,
         },
