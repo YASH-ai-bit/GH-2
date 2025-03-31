@@ -42,7 +42,7 @@ const HomePage = () => {
     localStorage.setItem("allUsers", JSON.stringify(existingUsers));
 
     localStorage.setItem("currentUsername", username);
-    localStorage.setItem(`user_${username}_userId`, json._id);
+    localStorage.setItem(`user_${username}_userId`, json.id);
 
     if (!localStorage.getItem(`highScore_${username}`)) {
       localStorage.setItem(`highScore_${username}`, 0);

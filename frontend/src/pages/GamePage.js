@@ -38,7 +38,7 @@ const GamePage = () => {
   const handleGuess = async (choice) => {
     if (!wordPair || isFetching) return;
     const correctChoice =
-      wordPair.word1.searchCount >= wordPair.word2.searchCount
+      wordPair.word1.search_count >= wordPair.word2.search_count
         ? "word1"
         : "word2";
     if (choice === correctChoice) {
@@ -58,7 +58,7 @@ const GamePage = () => {
             method: "PUT",
             body: JSON.stringify({ highScore: score }),
             headers: {
-              "content-Type": "application/json",
+              "Content-Type": "application/json",
             },
           });
 
@@ -79,7 +79,7 @@ const GamePage = () => {
   return (
     <div className="game-page">
       <div className="score-container">
-        <span className="high-score">High Score: {highScore}</span>
+        <span className="high-score" >High Score: {highScore}</span>
         <span className="current-score">Score: {score}</span>
       </div>
       {wordPair && (
@@ -87,11 +87,11 @@ const GamePage = () => {
           <div
             className="word-card left"
             onClick={() => handleGuess("word1")}
-            style={{ backgroundImage: `url(${wordPair.word1.imageUrl})` }}
+            style={{ backgroundImage: `url(${wordPair.word1.image_url})` }}
           >
             <span className="word-text">{wordPair.word1.word}</span>
             <span className="word-count">
-              {wordPair.word1.searchCount.toLocaleString()}{" "}
+              {wordPair.word1.search_count.toLocaleString()}{" "}
             </span>
             <br />
             <span className="word-count-text">average monthly searches</span>
@@ -99,7 +99,7 @@ const GamePage = () => {
           <div
             className="word-card right"
             onClick={() => handleGuess("word2")}
-            style={{ backgroundImage: `url(${wordPair.word2.imageUrl})` }}
+            style={{ backgroundImage: `url(${wordPair.word2.image_url})` }}
           >
             <span className="word-text">{wordPair.word2.word}</span>
           </div>

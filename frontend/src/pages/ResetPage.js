@@ -40,8 +40,8 @@ const ResetPage = () => {
 
       <div className="reset-content">
         <h1>Game Over!</h1>
-        <h2>
-          Your Score: <span style={{ color: "#FFD700" }}>{score}</span>
+        <h2 style={{color: "whitesmoke", fontSize: "40px"}}>
+          Your Score: <span style={{ color: "#FFD700", fontSize: "45px" }}>{score}</span>
         </h2>
         <p>{MessageBasedOnScore(score)}</p>
 
