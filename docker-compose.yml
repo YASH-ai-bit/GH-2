@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://guess_higher_user:FH1XIOQIaw4krpcpJEUNnfny2fIkSwMd@dpg-cvl9ia56ubrc73bh04b0-a.singapore-postgres.render.com/guess_higher
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:16.8
+    environment:
+      DB_USER: guess_higher_user
+      DB_HOST: dpg-cvl9ia56ubrc73bh04b0-a
+      DB_NAME: guess_higher
+      DB_PASSWORD: FH1XIOQIaw4krpcpJEUNnfny2fIkSwMd
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
